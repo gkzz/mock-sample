@@ -6,9 +6,12 @@ import re
 import paramiko
 import yaml
 
+from common import Common
+
 
 class Demo:
     def __init__(self):
+        self.common = Common()
         self.filename = 'input.yml'
         #self.category = 'localhost'
         self.category = 'sakura'
@@ -20,22 +23,6 @@ class Demo:
             input[key] = value
         
         return input
-    
-    def execute_command(self, input):
-        self.client = paramiko.SSHClient()
-        self.client.load_system_host_keys()
-        self.client.set_missing_host_key_policy(paramiko.WarningPolicy())
-        self.client.connect(
-            input['hostname'], port=input['port'] , 
-            username=input['username'], password=input['password'], key_filename=input['key'],
-            #
-            # cf. paramiko no existing session exception
-            #     https://stackoverflow.com/questions/6832248/paramiko-no-existing-session-exception
-            allow_agent=input['allow_agent'],look_for_keys=input['look_for_keys']
-        )
-        stdin, stdout, stderr = self.client.exec_command(self.command)
-
-        return stdin, stdout, stderr
     
     
     def get_output(self, stdout):
@@ -67,7 +54,7 @@ class Demo:
 
     def main(self):
         input = self.get_input()
-        stdin, stdout, stderr = self.execute_command(input)
+        stdin, stdout, stderr = self.common.execute_command(input, self.command)
         
         success, output = self.get_output(stdout)
         if success:
@@ -81,19 +68,4 @@ class Demo:
         })
 
         return output
-
-"""
-if __name__ == '__main__':
-    import time
-    start = time.time()
-    #command = 'ls'
-
-    obj = Demo()
-    outputs = obj.main()
-    print('outputs:{outputs}'.format(outputs=outputs))
-    end = time.time()
-    print("process {timedelta} ms".format(
-        timedelta = (end - start) * 1000
-    ))
-"""
           
