@@ -82,7 +82,7 @@ class Demo:
 
         return output
 
-#"""
+"""
 if __name__ == '__main__':
     import time
     start = time.time()
@@ -95,5 +95,5 @@ if __name__ == '__main__':
     print("process {timedelta} ms".format(
         timedelta = (end - start) * 1000
     ))
-#"""
+"""
           
