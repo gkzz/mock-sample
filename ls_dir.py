@@ -68,4 +68,3 @@ class Demo:
         })
 
         return output
-          
