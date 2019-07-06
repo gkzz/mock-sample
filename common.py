@@ -24,9 +24,11 @@ class Common:
         stdin, stdout, stderr = self.client.exec_command(command)
         return stdin, stdout, stderr
     
+    """
     def log(self, outputs, log_dir):
         if len(outputs) != 0:
             df = pd.DataFrame(outputs)
             df.to_json(log_dir + '/log_'+datetime.datetime.now().strftime('%Y%m%d_%H%M%S')+'.json', force_ascii=False)
         else:
             pass
+    """
