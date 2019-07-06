@@ -1,0 +1,30 @@
+localhost:
+  hostname:
+    '127.0.0.1'
+  username:
+    '<username>'
+  password:
+    '<password>'
+  port:
+    <22>
+  key:
+    '</path/.ssh/id_rsa>'
+  allow_agent:
+    False
+  look_for_keys:
+    False
+sakura:
+  hostname:
+    '<ip_address>'
+  username:
+    '<username>'
+  password:
+    '<password>'
+  port:
+    <22>
+  key:
+    '</path/.ssh/id_rsa>'
+  allow_agent:
+    False
+  look_for_keys:
+    False
