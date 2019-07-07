@@ -3,6 +3,7 @@
 
 import datetime
 import re
+import sys
 import paramiko
 import yaml
 
@@ -15,10 +16,21 @@ class Demo:
         self.filename  = 'input.yml'
         #self.category = 'localhost'
         self.category  = 'sakura'
-        self.command   = 'ls'
-        self.cmd_option_key = self.command
         self.conts     = 0
         self.max_conts = 3
+        self.cmd_option_key = 'systemctl'
+
+        try:      
+            if sys.argv[1] == 'httpd' or sys.argv[1] == 'firewalld':
+                self.command = 'systemctl status {service}'.format(service=sys.argv[1])
+            elif sys.argv[2] == 'httpd' or sys.argv[2] == 'firewalld':
+                self.command = 'systemctl status {service}'.format(service=sys.argv[2])
+            else:
+                sys.exit(1)
+        except:
+            raise IndexError(
+                "Three command arguments are required. {args}".format(args=' '.join(sys.argv[0])) 
+            )
 
 
     def get_input(self):
@@ -30,7 +42,8 @@ class Demo:
     
     def create_commmand(self, cmd_option=None):
         if cmd_option is None:
-            return ""
+            if sys.arg[1]:
+                return " {service}".format(tar)
         else:
             return " {opt}".format(opt = ' '.join(cmd_option))
     
@@ -43,32 +56,34 @@ class Demo:
             output[key] = ""
 
         response = []
-        #
-        #                      #1   #2
-        ptn = re.compile(r'\s*(\S+)(\n*)\s*')
-        #How to enumerate a range of numbers starting at 1
-        #https://stackoverflow.com/questions/3303608/how-to-enumerate-a-range-of-numbers-starting-at-1
-        #enumerate(sequence, start=1)
         try:
-            for line in stdout:
-                if ptn.search(str(line)):
-                    response.append(ptn.search(str(line)).group(1))
+            stdout = stdout.read()
+            if type(stdout) == str:
+                if re.search(r'\s*(.*)(\n*)\s*', stdout):
+                    response.append(re.search(r'\s*(.*)(\n*)\s*', stdout).group(1))
                 else:
-                    response.append(str(line))
-                
+                    response.appned(stdout)
+            else:
+                pass
         except:
             pass
         
-        if len(response) == 0:
-            output.update({
-                'bool'    : False,
-                'response': None
-            })
-        else:
+        if 1 <= len(response) and re.search(r'\s*(Active:)\s+(active)\s+(\(running\))', response[0]):
             output.update({
                 'bool'    : True,
                 'response': ', '.join(response)
             })
+        elif 1 <= len(response):
+            output.update({
+                'bool'    : False,
+                'response': ', '.join(response)
+            })
+        else:
+            output.update({
+                'bool'    : False,
+                'response': None
+            })
+
         
         output.update({
             'cmd': self.command,
