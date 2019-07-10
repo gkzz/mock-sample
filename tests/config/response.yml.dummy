@@ -1,0 +1,16 @@
+timestamp:
+  '2019-07-10 22:24:55'
+ls:
+  'true':
+    'stdout':
+      'docs, hoge.txt, hoge2.txt, src'
+  'false':
+    'stderr':
+      'Error Test'
+system:
+  'true':
+    'stdout':
+      'Active: active (running) since Mon 2019-07-08 01:17:03 JST; 2 days ago'
+  'false':
+    'stderr':
+      'Error Test'
