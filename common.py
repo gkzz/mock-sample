@@ -29,35 +29,23 @@ class Common:
             allow_agent=input['allow_agent'],look_for_keys=input['look_for_keys']
         )
 
-    def execute_command(self, input, command, ptn=None):
+    def execute_command(self, input, command):
         self.open_session(input)
         #stdin, stdout, stderr = self.client.exec_command(command)
         _, stdout, stderr = self.client.exec_command(command)
         stdout = stdout.read()
         stderr = stderr.read()
-        success = False
         if stderr == '':
-            if ptn is None:
-                success = True
-                stdout = stdout.replace('\n', ', ').strip()
-                stderr = None
-            elif ptn.search(stdout):
-                success = True
-                stdout = stdout.replace('\n', ', ').strip()
-                stderr = None
-            else:
-                success = False
-                stdout = stdout.replace('\n', ', ').strip()
-                stderr = None
-
+            stdout = stdout.replace('\n', ', ').strip()
+            stderr = None
         elif stdout == '':
             stdout = None 
             stderr = stderr.replace('\n', ', ').strip()
         else:
-            stdout = stdout.strip()
-            stderr = stderr.strip()
+            stdout = None
+            stderr = None
         
-        return success, stdout, stderr
+        return stdout, stderr
     
     def get_output(self, success, conts, command, stdout, stderr, column_order):
         output = {}

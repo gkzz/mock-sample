@@ -33,19 +33,23 @@ class Demo:
 
     def main(self):
         outputs = []
+        success = False
+        stdout = None
+        stderr = None
         input = self.common.get_input(self.filename, self.category)
         self.command = self.command + self.create_commmand(
             input['cmd_option'][self.cmd_option_key]
         )
         while True:
-            self.conts += 1
+            current_output = {}
             try:
-                if self.conts < self.max_conts:
-                    success, stdout, stderr = self.common.execute_command(
+                if self.conts <= self.max_conts:
+                    self.conts += 1
+                    stdout, stderr = self.common.execute_command(
                         input, self.command
                     )
-                    current_output = None
-                    if success:
+                    if stdout is not None and stderr is None:
+                        success = True
                         current_output = self.common.get_output(
                             success, self.conts, self.command, 
                             stdout, stderr, self.column_order
@@ -56,17 +60,14 @@ class Demo:
                         continue
                 else:
                     success = False
-                    stdout = None
-                    stderr = None
                     current_output = self.common.get_output(
                         success, self.conts, self.command, 
                         stdout, stderr, self.column_order
                     )
                     outputs.append(current_output)
+                    break
             except:
-                outputs = None
                 continue
-
 
         
         if outputs is not None:
