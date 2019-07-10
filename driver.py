@@ -19,6 +19,7 @@ else:
 
 start = time.time()
 obj = Demo()
+import pdb; pdb.set_trace()
 outputs = obj.main()
 print('outputs:{outputs}'.format(outputs=outputs))
 end = time.time()

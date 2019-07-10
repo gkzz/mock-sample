@@ -3,7 +3,6 @@
 
 import datetime
 import re
-import paramiko
 import yaml
 
 from common import Common
@@ -19,14 +18,10 @@ class Demo:
         self.cmd_option_key = self.command
         self.conts     = 0
         self.max_conts = 3
+        self.column_order = [
+            'timestamp', 'success', 'execute_conts', 'command', 'stdout', 'stderr' 
+        ]
 
-
-    def get_input(self):
-        input = {}
-        for key, value in yaml.safe_load(open(self.filename))[self.category].iteritems():
-            input[key] = value
-        
-        return input
     
     def create_commmand(self, cmd_option=None):
         if cmd_option is None:
@@ -34,76 +29,51 @@ class Demo:
         else:
             return " {opt}".format(opt = ' '.join(cmd_option))
     
-    
-    def get_output(self, stdout):
-        output = {}
-        for key in [
-            'timestamp', 'bool', 'execute_conts', 'cmd', 'response'
-            ]:
-            output[key] = ""
-
-        response = []
-        #
-        #                      #1   #2
-        ptn = re.compile(r'\s*(\S+)(\n*)\s*')
-        #How to enumerate a range of numbers starting at 1
-        #https://stackoverflow.com/questions/3303608/how-to-enumerate-a-range-of-numbers-starting-at-1
-        #enumerate(sequence, start=1)
-        try:
-            for line in stdout:
-                if ptn.search(str(line)):
-                    response.append(ptn.search(str(line)).group(1))
-                else:
-                    response.append(str(line))
-                
-        except:
-            pass
         
-        if len(response) == 0:
-            output.update({
-                'bool'    : False,
-                'response': None
-            })
-        else:
-            output.update({
-                'bool'    : True,
-                'response': ', '.join(response)
-            })
-        
-        output.update({
-            'cmd': self.command,
-            'timestamp' : datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        })
-
-        return output
-    
 
     def main(self):
         outputs = []
-        input = self.get_input()
-        self.command = self.command + self.create_commmand(input['cmd_option'][self.cmd_option_key])
+        input = self.common.get_input(self.filename, self.category)
+        self.command = self.command + self.create_commmand(
+            input['cmd_option'][self.cmd_option_key]
+        )
         while True:
+            self.conts += 1
             try:
-                stdin, stdout, stderr = self.common.execute_command(input, self.command)
-                current_output = self.get_output(stdout)
-                self.conts += 1
-                if current_output['bool']:
-                    current_output.update({'execute_conts': self.conts})
-                    break
-                else:
-                    if self.conts < self.max_conts:
-                        current_output = None
-                        continue
-                    else:
-                        current_output.update({'execute_conts': self.conts})
+                if self.conts < self.max_conts:
+                    success, stdout, stderr = self.common.execute_command(
+                        input, self.command
+                    )
+                    current_output = None
+                    if success:
+                        current_output = self.common.get_output(
+                            success, self.conts, self.command, 
+                            stdout, stderr, self.column_order
+                        )
+                        outputs.append(current_output)
                         break
+                    else:
+                        continue
+                else:
+                    success = False
+                    stdout = None
+                    stderr = None
+                    current_output = self.common.get_output(
+                        success, self.conts, self.command, 
+                        stdout, stderr, self.column_order
+                    )
+                    outputs.append(current_output)
             except:
-                current_output = None
-                break
+                outputs = None
+                continue
 
-        if current_output is None:
-            outputs = None
+
+        
+        if outputs is not None:
+            self.common.log(self.cmd_option_key, outputs, self.column_order)
         else:
-            outputs.append(current_output)
+            pass
+        
+        self.common = None
 
         return outputs
