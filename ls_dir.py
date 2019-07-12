@@ -36,6 +36,7 @@ class Demo:
         success = False
         stdout = None
         stderr = None
+
         input = self.common.get_input(self.filename, self.category)
         self.command = self.command + self.create_commmand(
             input['cmd_option'][self.cmd_option_key]
@@ -69,12 +70,11 @@ class Demo:
             except:
                 continue
 
-        
         if outputs is not None:
             self.common.log(self.cmd_option_key, outputs, self.column_order)
         else:
             pass
-        
+
         self.common = None
 
         return outputs
