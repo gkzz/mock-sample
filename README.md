@@ -27,6 +27,7 @@ $ cd 27 && pip install --upgrade pip && pip install -r requirements_dev.txt
 ```
 
 # How to run unittest
+<img src="/docs/demo/develmock.gif " alt="Demo to run unittest with mock" style="max-width:100%;">
 ```
 $ ls tests/ | grep test
 test_ls_dir.py
