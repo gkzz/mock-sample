@@ -26,6 +26,11 @@ $ python2.7 -m virtualenv 27 && source 27/bin/activate
 $ cd 27 && pip install --upgrade pip && pip install -r requirements_dev.txt
 ```
 
+# How You run unittest
+$ $ ls tests/ | grep test
+test_ls_dir.py
+$ python -m unittest tests.test_ls_dir
+
 ## Trobleshooting
 `being prepared`
 
@@ -47,4 +52,41 @@ BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
 PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
 VERSION_CODENAME=disco
 UBUNTU_CODENAME=disco
+
+$ $ tree -L 3
+.
+├── common.py
+├── common.pyc
+├── docs
+│   └── demo
+│       └── system_status.gif
+├── driver.py
+├── __init__.py
+├── __init__.pyc
+├── input.yml
+├── input.yml.dummy
+├── logs
+│   ├── log_xx_xx.json
+│   ├── log_xx_xx.csv
+├── ls_dir.py
+├── ls_dir.pyc
+├── ps_aux.pyc
+├── README.md
+├── requirements_dev.txt
+├── requirements.txt
+├── system_status.py
+├── system_status.pyc
+    ├── config
+    │   ├── response.yml
+    │   ├── response.yml.dummy
+    │   ├── test_input.yml
+    │   ├── test_input.yml.dummy
+    │   ├── test_output.yml
+    │   └── test_output.yml.dummy
+    ├── __init__.py
+    ├── __init__.pyc
+    ├── test_ls_dir.py
+    └── test_ls_dir.pyc
+
+15 directories, 70 files
 ```
