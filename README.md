@@ -28,7 +28,7 @@ $ cd 27 && pip install --upgrade pip && pip install -r requirements_dev.txt
 
 # How to run unittest
 ```
-$ $ ls tests/ | grep test
+$ ls tests/ | grep test
 test_ls_dir.py
 $ python -m unittest tests.test_ls_dir
 ```
