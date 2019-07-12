@@ -36,7 +36,7 @@ class Demo:
         stdout = None
         stderr = None 
 
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
         input = self.common.get_input(self.filename, self.category)
         self.command = self.command + self.create_commmand(
             input['cmd_option'][self.cmd_option_key]

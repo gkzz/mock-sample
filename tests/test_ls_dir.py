@@ -69,7 +69,7 @@ class TestLsDir(unittest.TestCase):
     method_log = class_common + '.log'
 
     
-    @patch(method_log, return_value='method_log')
+    @patch(method_log, return_value='dummy')
     @patch(method_execute_command) 
     @patch(method_params) 
     def test01_ok_ls_demo_dir(self, params, execute, logger):
