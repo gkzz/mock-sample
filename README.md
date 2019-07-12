@@ -26,10 +26,12 @@ $ python2.7 -m virtualenv 27 && source 27/bin/activate
 $ cd 27 && pip install --upgrade pip && pip install -r requirements_dev.txt
 ```
 
-# How You run unittest
+# How to run unittest
+```
 $ $ ls tests/ | grep test
 test_ls_dir.py
 $ python -m unittest tests.test_ls_dir
+```
 
 ## Trobleshooting
 `being prepared`
