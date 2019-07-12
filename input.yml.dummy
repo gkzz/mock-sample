@@ -30,8 +30,8 @@ sakura:
     False
   cmd_option:
     'ls':
-      - 'demo/'
+      'demo/'
     'ps_aux':
-      - '| tail -n 5'
+      '| tail -n 5'
     'systemctl':
-      - '| grep Active'
+      '| grep Active'

@@ -27,15 +27,15 @@ class Demo:
         if cmd_option is None:
             return ""
         else:
-            return " {opt}".format(opt = ' '.join(cmd_option))
-    
+            return " {opt}".format(opt = cmd_option)    
         
 
     def main(self):
         outputs = []
         success = False
         stdout = None
-        stderr = None
+        stderr = None 
+
 
         input = self.common.get_input(self.filename, self.category)
         self.command = self.command + self.create_commmand(

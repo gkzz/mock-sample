@@ -3,7 +3,16 @@ timestamp:
 ls:
   'true':
     'stdout':
-      'docs, hoge.txt, hoge2.txt, src'
+      'demo':
+        'docs, hoge.txt, hoge2.txt, src'
+      'demo_la_opt':
+        - 'total 16\n' 
+        - 'drwxr-xr-x  4 root root 4096 Jul  6 21:12 .\n'
+        - 'dr-xr-x---. 7 root root 4096 Jul  6 21:11 ..\n'
+        - 'drwxr-xr-x  2 root root 4096 Jul  6 21:12 docs\n' 
+        - '-rw-r--r--  1 root root    0 Jul  6 21:11 hoge.txt\n'
+        - '-rw-r--r--  1 root root    0 Jul  6 21:11 hoge2.txt\n'
+        - 'drwxr-xr-x  2 root root 4096 Jul  6 21:12 src\n'
   'false':
     'stderr':
       'Error Test'
