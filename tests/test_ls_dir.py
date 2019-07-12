@@ -94,22 +94,22 @@ class TestLsDir(unittest.TestCase):
 
 
         def _execute_command(_input, _command):
-            stdout = None
-            stderr = None
+            _stdout = None
+            _stderr = None
 
             if re.search(
                 r'^\s*(ls)\s+(-la)\s+(demo\/)\s*$', _command):
-                stdout = ', '.join(response_true['stdout']['demo_la_opt'])
-                stdout = stdout.lstrip('\n')
+                _stdout = ', '.join(response_true['stdout']['demo_la_opt'])
+                _stdout = stdout.rstrip('\n')
             elif re.search(
                 r'^\s*(ls)\s+(demo\/)\s*$', _command):
-                stdout = response_true['stdout']['demo']
+                _stdout = response_true['stdout']['demo']
                 
             else:
                 raise Error("_excute_command_error")
                 
             
-            return stdout, stderr
+            return _stdout, _stderr
 
         params.side_effect = _get_input
         execute.side_effect = _execute_command
@@ -117,6 +117,20 @@ class TestLsDir(unittest.TestCase):
 
         obj = Demo()
         outputs = obj.main()
+
+        self.assertEqual(
+            params.call_count, 1
+        )
+        self.assertEqual(
+            execute.call_count, 1
+        )
+        self.assertEqual(
+            logger.call_count, 1
+        )
+        
+        params.assert_called_once_with('input.yml', 'sakura')
+        execute.assert_called_once_with(test_input, 'ls demo/')
+        logger.assert_called_once()
 
 
         self.assertEqual(
@@ -168,21 +182,21 @@ class TestLsDir(unittest.TestCase):
 
 
         def _execute_command(_input, _command):
-            stdout = None
-            stderr = None
+            _stdout = None
+            _stderr = None
 
             if re.search(
                 r'^\s*(ls)\s+(-la)\s+(demo\/)\s*$', _command):
-                stdout = ', '.join(response_true['stdout']['demo_la_opt'])
-                stdout = stdout.lstrip('\n')
+                _stdout = ', '.join(response_true['stdout']['demo_la_opt'])
+                _stdout = _stdout.rstrip('\n')
             elif re.search(
                 r'^\s*(ls)\s+(demo\/)\s*$', _command):
-                stdout = response_true['stdout']['demo']
+                _stdout = response_true['stdout']['demo']
             else:
                 raise Exception("_excute_command_error")
                 
             
-            return stdout, stderr
+            return _stdout, _stderr
 
         params.side_effect = _get_input
         execute.side_effect = _execute_command
@@ -190,6 +204,20 @@ class TestLsDir(unittest.TestCase):
 
         obj = Demo()
         outputs = obj.main()
+
+        self.assertEqual(
+            params.call_count, 1
+        )
+        self.assertEqual(
+            execute.call_count, 1
+        )
+        self.assertEqual(
+            logger.call_count, 1
+        )
+        
+        params.assert_called_once_with('input.yml', 'sakura')
+        execute.assert_called_once_with(test_input, 'ls -la demo/')
+        logger.assert_called_once()
 
 
         self.assertEqual(
