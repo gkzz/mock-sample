@@ -41,40 +41,43 @@ response_false = response['false']
 class TestLsDir(unittest.TestCase):
 
     def setUp(self):
-        self.test_input = load_yaml(config_dir  + '/test_input.yml', 'sakura')
+        # Read yml file
+        self.test_input = load_yaml(
+            config_dir  + '/test_input.yml', 'sakura'
+        )
+        # Set Object
         self.obj = Demo()
     
     def tearDown(self):
         self.test_input = None
         self.outputs = None
 
-    """
+    
     def test00_nomock(self):
 
-        obj = Demo()
-        outputs = self.obj.main()
+        self.outputs = self.obj.main()
         self.assertEqual(
-            len(outputs[0]), 6
+            len(self.outputs[0]), 6
         )
         self.assertIn(
-            "2019", outputs[0]["timestamp"]
+            "2019", self.outputs[0]["timestamp"]
         )
         self.assertEqual(
-            outputs[0]["success"], test_output["success"]
+            self.outputs[0]["success"], test_output["success"]
         )
         self.assertEqual(
-            outputs[0]["execute_conts"], test_output["execute_conts"]
+            self.outputs[0]["execute_conts"], test_output["execute_conts"]
         )
         self.assertEqual(
-            outputs[0]["command"], test_output["command"]
+            self.outputs[0]["command"], test_output["command"]
         )
         self.assertEqual(
-            outputs[0]["stdout"], test_output["stdout"]["demo"]
+            self.outputs[0]["stdout"], test_output["stdout"]["demo"]
         )
         self.assertEqual(
-            outputs[0]["stderr"], None
+            self.outputs[0]["stderr"], None
         )
-    """
+    
     
     class_common = 'mock_sample.common.Common'
     method_params = class_common + '.get_input'
