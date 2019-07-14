@@ -4,6 +4,7 @@
 import datetime
 import re
 import yaml
+import traceback
 
 from common import Common
 
@@ -16,18 +17,35 @@ class Demo:
         self.category  = 'sakura'
         self.command   = 'ls'
         self.cmd_option_key = self.command
+        #self.cmd_option_key = None
         self.conts     = 0
         self.max_conts = 3
         self.column_order = [
             'timestamp', 'success', 'execute_conts', 'command', 'stdout', 'stderr' 
         ]
 
+    def _set_option(self, input):
+        if self.cmd_option_key is None:
+            return ""
+        else:
+            return " {opt}".format(opt = input["cmd_option"][self.cmd_option_key])
+
+
     
     def create_commmand(self, cmd_option=None):
         if cmd_option is None:
             return ""
         else:
-            return " {opt}".format(opt = cmd_option)    
+            return " {opt}".format(opt = cmd_option) 
+
+
+    def set_filekey(self):
+        if re.search(r'\s*(\S+)\s*', self.command):
+            return '{filekey}'.format(
+                filekey=re.search(r'\s*(\S+)\s*', self.command).group(1)
+            )
+        else:
+            return 'unknown_command'
         
 
     def main(self):
@@ -36,11 +54,9 @@ class Demo:
         stdout = None
         stderr = None 
 
-        #import pdb; pdb.set_trace()
         input = self.common.get_input(self.filename, self.category)
-        self.command = self.command + self.create_commmand(
-            input['cmd_option'][self.cmd_option_key]
-        )
+        self._cmd_option = self._set_option(input)
+        self.command = self.command + self._cmd_option
         while True:
             current_output = {}
             try:
@@ -68,10 +84,13 @@ class Demo:
                     outputs.append(current_output)
                     break
             except:
+                stdout = None
+                stderr = traceback.format_exc()
                 continue
 
         if outputs is not None:
-            self.common.log(self.cmd_option_key, outputs, self.column_order)
+            filekey = self.set_filekey()
+            self.common.log(filekey, outputs, self.column_order)
         else:
             pass
 

@@ -16,7 +16,7 @@ class Demo:
         self.filename  = 'input.yml'
         #self.category = 'localhost'
         self.category  = 'sakura'
-        self.command   = 'ls'
+        self.command   = 'systemctl status firewalld'
         self.cmd_option_key = 'systemctl'
         self.conts     = 0
         self.max_conts = 3
@@ -44,7 +44,7 @@ class Demo:
         if cmd_option is None:
             return ""
         else:
-            return " {opt}".format(opt = ' '.join(cmd_option))
+            return " {opt}".format(opt = cmd_option)
     
         
 

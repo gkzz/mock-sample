@@ -18,6 +18,8 @@ ls:
       - '-rw-r--r--  1 root root    0 Jul  6 21:11 hoge.txt\n'
       - '-rw-r--r--  1 root root    0 Jul  6 21:11 hoge2.txt\n'
       - 'drwxr-xr-x  2 root root 4096 Jul  6 21:12 src\n'
+  stderr:
+    '_excute_command_error'
 system:
   timestamp:
     '2019-07-10 22:24:55'
@@ -29,3 +31,5 @@ system:
     'ls_demo/'
   stdout:
     'Active: active (running) since Mon 2019-07-08 01:17:03 JST; 2 days ago'
+  stderr:
+    '_excute_command_error'
