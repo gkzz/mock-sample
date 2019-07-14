@@ -31,13 +31,6 @@ class Demo:
             return " {opt}".format(opt = input["cmd_option"][self.cmd_option_key])
 
 
-    
-    def create_commmand(self, cmd_option=None):
-        if cmd_option is None:
-            return ""
-        else:
-            return " {opt}".format(opt = cmd_option) 
-
 
     def set_filekey(self):
         if re.search(r'\s*(\S+)\s*', self.command):
