@@ -21,6 +21,17 @@ config_dir = test_dir + '/config'
 from mock_sample.common import Common
 from mock_sample.ls_dir import Demo
 
+"""
+try:
+    from common import Common
+    from ls_dir import Demo
+except ImportError:
+    from mock_sample.common import Common
+    from mock_sample.ls_dir import Demo
+except:
+    sys.exit()
+"""
+
 #https://cpython-test-docs.readthedocs.io/en/latest/library/unittest.mock.html
 
 
@@ -52,7 +63,7 @@ class TestLsDir(unittest.TestCase):
         self.test_input = None
         self.outputs = None
 
-    
+    """
     def test00_nomock(self):
 
         self.outputs = self.obj.main()
@@ -77,6 +88,7 @@ class TestLsDir(unittest.TestCase):
         self.assertEqual(
             self.outputs[0]["stderr"], None
         )
+    """
     
     
     class_common = 'mock_sample.common.Common'
@@ -334,4 +346,5 @@ class TestLsDir(unittest.TestCase):
 
 
 if __name__ == '__main__': 
+    import pdb; pdb.set_trace() 
     unittest.main()

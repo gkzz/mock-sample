@@ -6,7 +6,7 @@ ls:
   execute_conts: 
     1
   command:
-    'ls_demo/'
+    'ls demo/'
   stdout:
     'demo':
       'docs, hoge.txt, hoge2.txt, src'
@@ -28,7 +28,7 @@ system:
   execute_conts: 
     1
   command:
-    'ls_demo/'
+    'ls demo/'
   stdout:
     'Active: active (running) since Mon 2019-07-08 01:17:03 JST; 2 days ago'
   stderr:

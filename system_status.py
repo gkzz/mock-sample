@@ -10,8 +10,8 @@ import yaml
 from common import Common
 
 
-class Demo:
-    def __init__(self):
+class Demo():
+    def __init__(self, service=None):
         self.common    = Common()
         self.filename  = 'input.yml'
         #self.category = 'localhost'
@@ -22,17 +22,22 @@ class Demo:
         self.max_conts = 3
         self.ptn = re.compile(r'\s*(Active:)\s+(active)\s+(\(running\))')
 
-        try:      
-            if sys.argv[1] == 'httpd' or sys.argv[1] == 'firewalld':
-                self.command = 'systemctl status {service}'.format(service=sys.argv[1])
-            elif sys.argv[2] == 'httpd' or sys.argv[2] == 'firewalld':
-                self.command = 'systemctl status {service}'.format(service=sys.argv[2])
-            else:
-                sys.exit(1)
-        except:
-            raise IndexError(
-                "Three command arguments are required. {args}".format(args=' '.join(sys.argv[0])) 
+        if service is not None:
+            self.command = 'systemctl status {service}'.format(
+                service=service
             )
+        else:
+            try:   
+                if sys.argv[1] == 'httpd' or sys.argv[1] == 'firewalld':
+                    self.command = 'systemctl status {service}'.format(service=sys.argv[1])
+                elif sys.argv[2] == 'httpd' or sys.argv[2] == 'firewalld':
+                    self.command = 'systemctl status {service}'.format(service=sys.argv[2])
+                else:
+                    sys.exit(1)
+            except:
+                raise IndexError(
+                    "Three command arguments are required. {args}".format(args=' '.join(sys.argv[0])) 
+                )
 
 
         self.column_order = [

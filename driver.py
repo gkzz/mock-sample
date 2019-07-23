@@ -5,6 +5,7 @@ import time
 import os
 import sys
 
+"""
 # python driver.py ls
 if 'ls' in sys.argv[1]:
     from ls_dir import Demo
@@ -15,11 +16,12 @@ else:
     raise IndexError(
         "Cannot open the file: {arg}".format(arg=sys.argv[0])
     )
-
-
+"""
+from system_status import Demo
 
 start = time.time()
-obj = Demo()
+#obj = Demo()
+obj = Demo("httpd")
 import pdb; pdb.set_trace()
 outputs = obj.main()
 print('outputs:{outputs}'.format(outputs=outputs))

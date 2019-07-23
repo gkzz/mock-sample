@@ -45,7 +45,7 @@ class Demo:
         outputs = []
         success = False
         stdout = None
-        stderr = None 
+        stderr = None
 
         input = self.common.get_input(self.filename, self.category)
         self._cmd_option = self._set_option(input)
