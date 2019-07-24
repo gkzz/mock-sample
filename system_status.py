@@ -21,7 +21,6 @@ class Demo():
         self.conts     = 0
         self.max_conts = 3
         self.ptn = re.compile(r'\s*(Active:)\s+(active)\s+(\(running\))')
-
         if service is not None:
             self.command = 'systemctl status {service}'.format(
                 service=service

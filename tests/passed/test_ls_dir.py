@@ -21,16 +21,6 @@ config_dir = test_dir + '/config'
 from mock_sample.common import Common
 from mock_sample.ls_dir import Demo
 
-"""
-try:
-    from common import Common
-    from ls_dir import Demo
-except ImportError:
-    from mock_sample.common import Common
-    from mock_sample.ls_dir import Demo
-except:
-    sys.exit()
-"""
 
 #https://cpython-test-docs.readthedocs.io/en/latest/library/unittest.mock.html
 
