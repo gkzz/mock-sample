@@ -17,6 +17,9 @@ __pycache__
 #editor
 .vscode
 
+#logs
+logs
+
 #log file
 *.csv
 *.json
