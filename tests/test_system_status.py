@@ -225,7 +225,6 @@ class TestSytemStatus(unittest.TestCase):
             self.outputs[0]["stderr"], None
         )
     
-    """
     @patch(method_log, return_value='dummy')
     @patch(method_execute_command) 
     @patch(method_params) 
@@ -271,6 +270,8 @@ class TestSytemStatus(unittest.TestCase):
         logger.return_value
 
 
+        # Set Object
+        self.obj = Demo(service)
         self.outputs = self.obj.main()
 
         self.assertEqual(
@@ -365,6 +366,8 @@ class TestSytemStatus(unittest.TestCase):
         logger.return_value
 
 
+        # Set Object
+        self.obj = Demo(service)
         self.outputs = self.obj.main()
 
         self.assertEqual(
@@ -460,6 +463,8 @@ class TestSytemStatus(unittest.TestCase):
         logger.return_value
 
 
+        # Set Object
+        self.obj = Demo(service)
         self.outputs = self.obj.main()
 
         self.assertEqual(
@@ -507,6 +512,7 @@ class TestSytemStatus(unittest.TestCase):
     @patch(method_execute_command) 
     @patch(method_params) 
     def test11_ng_raise_httpd(self, params, execute, logger):
+        service = "httpd"
         
         def _get_input(_filename, _category):
             
@@ -540,6 +546,8 @@ class TestSytemStatus(unittest.TestCase):
         execute.side_effect = _execute_command
         logger.return_value
 
+        # Set Object
+        self.obj = Demo(service)
         self.outputs = self.obj.main()
 
         self.assertEqual(
@@ -577,7 +585,6 @@ class TestSytemStatus(unittest.TestCase):
         self.assertIn(
             test_output["stderr"], self.outputs[0]["stderr"]
         )
-    """
 
 if __name__ == '__main__': 
     unittest.main()
