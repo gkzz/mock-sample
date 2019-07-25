@@ -35,7 +35,6 @@ test_ls_dir.py
 $ python -m unittest tests.test_ls_dir
 ```
 
->>>>>>> devel-mock
 ## Trobleshooting
 `being prepared`
 
