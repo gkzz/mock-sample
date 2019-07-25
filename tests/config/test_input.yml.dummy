@@ -21,7 +21,7 @@ sakura:
   password:
     '<password>'
   port:
-    <22>
+    <port, e.g. 22>
   key:
     '</path/.ssh/id_rsa>'
   allow_agent:

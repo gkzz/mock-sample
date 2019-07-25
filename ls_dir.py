@@ -3,96 +3,90 @@
 
 import datetime
 import re
-import paramiko
 import yaml
+import traceback
+
+from common import Common
 
 
 class Demo:
     def __init__(self):
-        self.filename = 'input.yml'
+        self.common    = Common()
+        self.filename  = 'input.yml'
         #self.category = 'localhost'
-        self.category = 'sakura'
-        self.command  = 'ls demo/'
+        self.category  = 'sakura'
+        self.command   = 'ls'
+        self.cmd_option_key = self.command
+        #self.cmd_option_key = None
+        self.conts     = 0
+        self.max_conts = 3
+        self.column_order = [
+            'timestamp', 'success', 'execute_conts', 'command', 'stdout', 'stderr' 
+        ]
 
-    def get_input(self):
-        input = {}
-        for key, value in yaml.safe_load(open(self.filename))[self.category].iteritems():
-            input[key] = value
-
-        return input
-
-    def execute_command(self, input):
-        self.client = paramiko.SSHClient()
-        self.client.load_system_host_keys()
-        self.client.set_missing_host_key_policy(paramiko.WarningPolicy())
-        self.client.connect(
-            input['hostname'], port=input['port'] , 
-            username=input['username'], password=input['password'], key_filename=input['key'],
-            #
-            # cf. paramiko no existing session exception
-            #     https://stackoverflow.com/questions/6832248/paramiko-no-existing-session-exception
-            allow_agent=input['allow_agent'],look_for_keys=input['look_for_keys']
-        )
-        stdin, stdout, stderr = self.client.exec_command(self.command)
-
-        return stdin, stdout, stderr
+    def _set_option(self, input):
+        if self.cmd_option_key is None:
+            return ""
+        else:
+            return " {opt}".format(opt = input["cmd_option"][self.cmd_option_key])
 
 
-    def get_output(self, stdout):
-        success = True
-        output = {}
-        #
-        #                      #1   #2
-        ptn = re.compile(r'\s*(\S+)(\n*)\s*')
-        #How to enumerate a range of numbers starting at 1
-        #https://stackoverflow.com/questions/3303608/how-to-enumerate-a-range-of-numbers-starting-at-1
-        #enumerate(sequence, start=1)
-        for num, line in enumerate(stdout, start = 1):
-            """
-            print('num:{num}, line:{line}'.format(
-                num=num, line=line
-            ))
-            """
-            #line = None
-            if line is None:
-                success = False
-                break
-            elif ptn.search(str(line)):
-                output[num] = str(ptn.search(line).group(1))
-            else:
-                output[num] = str(line)
 
-        return success, output
-
+    def set_filekey(self):
+        if re.search(r'\s*(\S+)\s*', self.command):
+            return '{filekey}'.format(
+                filekey=re.search(r'\s*(\S+)\s*', self.command).group(1)
+            )
+        else:
+            return 'unknown_command'
+        
 
     def main(self):
-        input = self.get_input()
-        stdin, stdout, stderr = self.execute_command(input)
+        outputs = []
+        success = False
+        stdout = None
+        stderr = None
 
-        success, output = self.get_output(stdout)
-        if success:
-            output.update({'bool': True})
+        input = self.common.get_input(self.filename, self.category)
+        self._cmd_option = self._set_option(input)
+        self.command = self.command + self._cmd_option
+        while True:
+            current_output = {}
+            try:
+                if self.conts <= self.max_conts:
+                    self.conts += 1
+                    stdout, stderr = self.common.execute_command(
+                        input, self.command
+                    )
+                    if stdout is not None and stderr is None:
+                        success = True
+                        current_output = self.common.get_output(
+                            success, self.conts, self.command, 
+                            stdout, stderr, self.column_order
+                        )
+                        outputs.append(current_output)
+                        break
+                    else:
+                        continue
+                else:
+                    success = False
+                    current_output = self.common.get_output(
+                        success, self.conts, self.command, 
+                        stdout, stderr, self.column_order
+                    )
+                    outputs.append(current_output)
+                    break
+            except:
+                stdout = None
+                stderr = traceback.format_exc()
+                continue
+
+        if outputs is not None:
+            filekey = self.set_filekey()
+            self.common.log(filekey, outputs, self.column_order)
         else:
-            output.update({'bool': False})
+            pass
 
+        self.common = None
 
-        output.update({
-            'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        })
-
-        return output
-
-#"""
-if __name__ == '__main__':
-    import time
-    start = time.time()
-    #command = 'ls'
-
-    obj = Demo()
-    outputs = obj.main()
-    print('outputs:{outputs}'.format(outputs=outputs))
-    end = time.time()
-    print("process {timedelta} ms".format(
-        timedelta = (end - start) * 1000
-    ))
-#"""
+        return outputs
