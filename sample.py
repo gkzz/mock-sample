@@ -1,6 +1,12 @@
 
 class Sample:
     def challenge(self, conts):
+        """ 
+        When conts is equal to a even number, 
+        return value is true.
+        
+        Otherwise, the value is false.
+        """
         if conts % 2 == 0:
             return True
         else:
