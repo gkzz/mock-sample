@@ -126,7 +126,6 @@ class TestSytemStatus(unittest.TestCase):
     method_execute_command = class_common + '.execute_command'
     method_log = class_common + '.log'
 
-    
     @patch(method_log, return_value='dummy')
     @patch(method_execute_command) 
     @patch(method_params) 
@@ -278,7 +277,7 @@ class TestSytemStatus(unittest.TestCase):
             params.call_count, 1
         )
         self.assertEqual(
-            execute.call_count, 3
+            execute.call_count, 1
         )
         self.assertEqual(
             logger.call_count, 1
@@ -298,7 +297,7 @@ class TestSytemStatus(unittest.TestCase):
             self.outputs[0]["success"], test_output["success"]
         )
         self.assertEqual(
-            self.outputs[0]["execute_conts"], 3
+            self.outputs[0]["execute_conts"], 1
         )
         self.assertEqual(
             self.outputs[0]["command"], 
@@ -313,7 +312,6 @@ class TestSytemStatus(unittest.TestCase):
         self.assertEqual(
             self.outputs[0]["stderr"], None
         )
-
 
     @patch(method_log, return_value='dummy')
     @patch(method_execute_command) 
@@ -357,7 +355,7 @@ class TestSytemStatus(unittest.TestCase):
             elif execute.call_count == 3:
                 _stdout = response_true['stdout']['active']
             else:
-                raise Error("_excute_command_error")
+                raise Exception("_excute_command_error")
             
             return _stdout, _stderr
 
@@ -411,11 +409,10 @@ class TestSytemStatus(unittest.TestCase):
         )
 
 
-
     @patch(method_log, return_value='dummy')
     @patch(method_execute_command) 
     @patch(method_params) 
-    def test013_ok_restart_firewalld(self, params, execute, logger):
+    def test014_ok_restart_firewalld(self, params, execute, logger):
         service = "firewalld"
         
         def _get_input(_filename, _category):
@@ -454,7 +451,7 @@ class TestSytemStatus(unittest.TestCase):
             elif execute.call_count == 3:
                 _stdout = response_true['stdout']['active']
             else:
-                raise Error("_excute_command_error")
+                raise Exception("_excute_command_error")
             
             return _stdout, _stderr
 
@@ -506,8 +503,7 @@ class TestSytemStatus(unittest.TestCase):
         self.assertEqual(
             self.outputs[0]["stderr"], None
         )
-    
-    
+
     @patch(method_log, return_value='dummy')
     @patch(method_execute_command) 
     @patch(method_params) 
@@ -539,7 +535,7 @@ class TestSytemStatus(unittest.TestCase):
 
 
         def _execute_command(_input, _command):
-            raise Exception(response_false['stderr'])
+            raise Exception("_excute_command_error")
 
 
         params.side_effect = _get_input
@@ -577,7 +573,11 @@ class TestSytemStatus(unittest.TestCase):
             self.outputs[0]["execute_conts"], 4
         )
         self.assertEqual(
-            self.outputs[0]["command"], test_output["command"]
+            self.outputs[0]["command"], 
+            "{base} {service} | grep Active".format(
+                base=test_output["command"],
+                service=service
+            )
         )
         self.assertEqual(
             self.outputs[0]["stdout"], None
@@ -585,6 +585,90 @@ class TestSytemStatus(unittest.TestCase):
         self.assertIn(
             test_output["stderr"], self.outputs[0]["stderr"]
         )
+
+    @patch(method_log, return_value='dummy')
+    @patch(method_execute_command) 
+    @patch(method_params) 
+    def test12_ng_raise_httpd(self, params, execute, logger):
+        service = "firewalld"
+        
+        def _get_input(_filename, _category):
+            
+            #self.test_input = {
+            #    'hostname': '<ip_address>',
+            #    'username': '<username>', 
+            #    'password': '<password>', 
+            #    'port': <port, e.g. 22>
+            #    'key': '</path/.ssh/id_rsa>', 
+            #    'allow_agent': False, 
+            #    'look_for_keys': False, 
+            #    'cmd_option': {
+            #        'systemctl': '| grep Active'
+            #    },
+            #}
+            
+            self.test_input.update({
+                'cmd_option': {
+                    'systemctl': '| grep Active'
+                }
+            })
+
+            return self.test_input
+
+
+        def _execute_command(_input, _command):
+            raise Exception("_excute_command_error")
+
+
+        params.side_effect = _get_input
+        execute.side_effect = _execute_command
+        logger.return_value
+
+        # Set Object
+        self.obj = Demo(service)
+        self.outputs = self.obj.main()
+
+        self.assertEqual(
+            params.call_count, 1
+        )
+        self.assertEqual(
+            execute.call_count, 4
+        )
+        self.assertEqual(
+            logger.call_count, 1
+        )
+        
+        params.assert_called_once_with('input.yml', 'sakura')
+        execute.assert_called()
+        logger.assert_called_once()
+
+        self.assertEqual(
+            len(self.outputs[0]), 6
+        )
+        self.assertIn(
+            "2019", self.outputs[0]["timestamp"]
+        )
+        self.assertEqual(
+            self.outputs[0]["success"], False
+        )
+        self.assertEqual(
+            self.outputs[0]["execute_conts"], 4
+        )
+        self.assertEqual(
+            self.outputs[0]["command"], 
+            "{base} {service} | grep Active".format(
+                base=test_output["command"],
+                service=service
+            )
+        )
+        self.assertEqual(
+            self.outputs[0]["stdout"], None
+        )
+        self.assertIn(
+            test_output["stderr"], self.outputs[0]["stderr"]
+        )
+
+
 
 if __name__ == '__main__': 
     unittest.main()
